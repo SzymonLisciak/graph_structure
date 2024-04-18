@@ -1,5 +1,7 @@
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
+
 public class Graph {
     List<Node> nodes;
     List<Edge> edges;
@@ -105,4 +107,92 @@ public class Graph {
         }
         return null;
     }
+    public void djikstra(int sourceId) {
+    Node source = findNode(sourceId);
+    if (source == null) {
+        System.out.println("Nie istnieje wierzchołek o id: " + sourceId);
+        return;
+    }
+
+
+    Map<Node, Integer> distance = new HashMap<>();
+    Map<Node, Node> previous = new HashMap<>(); 
+    for (Node node : nodes) {
+        distance.put(node, Integer.MAX_VALUE);
+        previous.put(node, null);
+    }
+    distance.put(source, 0);
+
+    Set<Node> visited = new HashSet<>();
+    while (!visited.containsAll(nodes)) {
+
+        int minDistance = Integer.MAX_VALUE;
+        Node u = null;
+        for (Node node : distance.keySet()) {
+            if (!visited.contains(node) && distance.get(node) < minDistance) {
+                u = node;
+                minDistance = distance.get(node);
+            }
+        }
+        if (u == null) {
+
+            break;
+        }
+
+        visited.add(u);
+
+ 
+        for (Edge edge : getEdgeConnection(u.id)) {
+            Node v = (edge.v1 == u) ? edge.v2 : edge.v1;
+            int alt = distance.get(u) + edge.weight;
+            if (alt < distance.get(v)) {
+                distance.put(v, alt);
+                previous.put(v, u); // Update previous node for v
+            }
+        }
+    }
+
+
+    for (Node node : nodes) {
+        if (node != source) {
+            List<Node> path = new ArrayList<>();
+            Node current = node;
+            while (current != null) {
+                path.add(current);
+                current = previous.get(current);
+            }
+            Collections.reverse(path);
+            System.out.print("Shortest path from " + sourceId + " to " + node.id + ": ");
+            if (distance.get(node) < Integer.MAX_VALUE) {
+                System.out.print(path.stream().map(n -> String.valueOf(n.id)).collect(Collectors.joining(" -> ")));
+                System.out.println(" (Distance: " + distance.get(node) + ")");
+            } else {
+                System.out.println("unreachable");
+            }
+        }
+    }
+}
+    public List<Edge> kruskal() {
+        List<Edge> mst = new ArrayList();
+        edges.sort(Comparator.comparingInt(e -> e.weight));
+        int[] parent = new int[nodes.size()];
+        Arrays.fill(parent, -1);
+        int edgesAdded = 0;
+        int index =0;
+        while (mst.size() < nodes.size() -1 && edges.size() > index) {
+            Edge nextEdge = edges.get(index++);
+            int root1 = find(parent, nextEdge.v1.id);
+            int root2 = find(parent, nextEdge.v2.id);
+            if (root1 != root2) {
+                mst.add(nextEdge);
+                edgesAdded++;
+                union(parent, root1, root2);
+
+            }
+            return mstl;
+
+        }
+
+    }
+
 }
