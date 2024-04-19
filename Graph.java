@@ -1,4 +1,4 @@
-import java.lang.reflect.Array;
+iimport java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -189,10 +189,40 @@ public class Graph {
                 union(parent, root1, root2);
 
             }
-            return mstl;
 
         }
+        return mst;
 
+    }
+    private int find(int[] parent, int i) {
+        if (parent[i] == -1) {
+            return i;
+        }
+        return find(parent, parent[i]);
+    }
+    private void union(int[] parent, int x, int y) {
+        int rootX = find(parent, x);
+        int rootY = find(parent, y);
+        parent[rootX] = rootY;
+    }
+
+    public List<Edge> prim(int startNodeId) {
+        List<Edge> mst = new ArrayList();
+        Node startNode = findNode(startNodeId);
+        if (startNode == null) {
+            System.out.println("Taki wierzchołek nie istnieje");
+            return mst;
+        }
+        Set<Node> visited = new HashSet<>();
+        visited.add(startNode);
+        while(visited.size() < nodes.size()) {
+            Edge minEdge = null;
+            int minWeight = Integer.MAX_VALUE;
+            for (Node node : nodes) {
+
+            }
+        }
+        return new ArrayList(prim(startNodeId));
     }
 
 }
