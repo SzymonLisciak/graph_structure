@@ -207,22 +207,39 @@ public class Graph {
     }
 
     public List<Edge> prim(int startNodeId) {
-        List<Edge> mst = new ArrayList();
-        Node startNode = findNode(startNodeId);
-        if (startNode == null) {
-            System.out.println("Taki wierzchołek nie istnieje");
-            return mst;
-        }
-        Set<Node> visited = new HashSet<>();
-        visited.add(startNode);
-        while(visited.size() < nodes.size()) {
-            Edge minEdge = null;
-            int minWeight = Integer.MAX_VALUE;
-            for (Node node : nodes) {
-
+    List<Edge> mst = new ArrayList<>();
+    Node startNode = findNode(startNodeId);
+    if (startNode == null) {
+        System.out.println("Taki wierzchołek nie istnieje");
+        return mst;
+    }
+    Set<Node> visited = new HashSet<>();
+    visited.add(startNode);
+    while (visited.size() < nodes.size()) {
+        Edge minEdge = null;
+        int minWeight = Integer.MAX_VALUE;
+        for (Node visitedNode : visited) {
+            List<Edge> connectedEdges = getEdgeConnection(visitedNode.id);
+            for (Edge edge : connectedEdges) {
+                Node otherNode = (edge.v1 == visitedNode) ? edge.v2 : edge.v1;
+                if (!visited.contains(otherNode) && edge.weight < minWeight) {
+                    minEdge = edge;
+                    minWeight = edge.weight;
+                }
             }
         }
-        return new ArrayList(prim(startNodeId));
+        if (minEdge != null) {
+            mst.add(minEdge);
+            visited.add(minEdge.v1);
+            visited.add(minEdge.v2);
+        } else {
+            // If there are unvisited nodes but no edges connecting them to the visited set
+            // This means the graph is not connected
+            break;
+        }
     }
+    return mst;
+}
+
 
 }
