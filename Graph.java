@@ -239,6 +239,31 @@ public class Graph {
     }
     return mst;
 }
+    public int greedyColoring() {
+    Map<Node, Integer> colorMap = new HashMap<>();
+    int maxColor = 0;
+
+    for (Node node : nodes) {
+        Set<Integer> neighborColors = new HashSet<>();
+        for (Edge edge : getEdgeConnection(node.id)) {
+            Node neighbor = (edge.v1 == node) ? edge.v2 : edge.v1;
+            if (colorMap.containsKey(neighbor)) {
+                neighborColors.add(colorMap.get(neighbor));
+            }
+        }
+
+        int color = 1;
+        while (neighborColors.contains(color)) {
+            color++;
+        }
+
+        colorMap.put(node, color);
+        maxColor = Math.max(maxColor, color);
+    }
+
+    return maxColor;
+}
+
 
 
 }
