@@ -173,13 +173,14 @@ public class Graph {
     }
 }
     public List<Edge> kruskal() {
-        List<Edge> mst = new ArrayList();
+        List<Edge> mst = new ArrayList<>();
         edges.sort(Comparator.comparingInt(e -> e.weight));
-        int[] parent = new int[nodes.size()];
+        int maxNodeId = nodes.stream().mapToInt(node -> node.id).max().orElse(0);
+        int[] parent = new int[maxNodeId + 1];
         Arrays.fill(parent, -1);
         int edgesAdded = 0;
-        int index =0;
-        while (mst.size() < nodes.size() -1 && edges.size() > index) {
+        int index = 0;
+        while (mst.size() < nodes.size() - 1 && edges.size() > index) {
             Edge nextEdge = edges.get(index++);
             int root1 = find(parent, nextEdge.v1.id);
             int root2 = find(parent, nextEdge.v2.id);
@@ -187,13 +188,11 @@ public class Graph {
                 mst.add(nextEdge);
                 edgesAdded++;
                 union(parent, root1, root2);
-
             }
-
         }
         return mst;
-
     }
+
     private int find(int[] parent, int i) {
         if (parent[i] == -1) {
             return i;
@@ -267,4 +266,3 @@ public class Graph {
 
 
 }
-
