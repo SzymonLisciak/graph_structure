@@ -233,8 +233,7 @@ public class Graph {
             visited.add(minEdge.v1);
             visited.add(minEdge.v2);
         } else {
-            // If there are unvisited nodes but no edges connecting them to the visited set
-            // This means the graph is not connected
+
             break;
         }
     }
